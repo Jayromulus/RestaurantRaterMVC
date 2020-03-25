@@ -86,12 +86,27 @@ namespace RestaurantRater.Controllers
         {
             if (ModelState.IsValid)
             {
-                // look into what this does. maybe it updates an entry and then tells it that the entity has been modfied???
+                // tells the DbContext that this entity has been edited, and therefore needs to be updaed with the new information that we have given it
                 _db.Entry(restaurant).State = EntityState.Modified;
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
+            return View(restaurant);
+        }
+
+        //GET: Restaurant/Details/{id}
+        public ActionResult Details(int? id)
+        {
+            if(id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Restaurant restaurant = _db.Restaurants.Find(id);
+            if(restaurant == null)
+            {
+                return HttpNotFound();
+            }
             return View(restaurant);
         }
     }
